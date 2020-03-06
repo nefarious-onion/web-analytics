@@ -9,15 +9,45 @@ $(function () {
     $(document).on('view:ProductPage', function(){
         console.warn('View on [ProductPage] tracked');
     });
+    $(document).on('view:Basket', function(){
+        console.warn('View on [BasketPage] tracked');
+    });
+    $(document).on('view:Checkout', function(){
+        console.warn('View on [CheckoutPage] tracked');
+    });
+    $(document).on('view:Delivery', function(){
+        console.warn('View on [DeliveryPage] tracked');
+    });
+    $(document).on('view:Payment', function(){
+        console.warn('View on [PaymentPage] tracked');
+    });
 
     if (pathname === '/index.html' || pathname === '/') {
         $(document).trigger('view:HomePage');
     }
-
-    if (pathname === '/detail') {
+    if (pathname === '/detail.html') {
         $(document).trigger('view:ProductPage');
     }
-    
+    if (pathname === '/basket.html') {
+        $(document).trigger('view:Basket');
+    }
+    if (pathname === '/checkout1.html') {
+        $(document).trigger('view:Checkout');
+    }
+    if (pathname === '/checkout2.html') {
+        $(document).trigger('view:Delivery');
+    }
+    if (pathname === '/checkout3.html') {
+        $(document).trigger('view:Payment');
+    }
+    if (pathname === '/checkout4.html') {
+        $('.box-footer [type="submit"]').click(function(){
+            $(document).trigger('conversion');
+            alert('Conversion event triggered');
+        });
+    }
+
+// breadcrums missing...
 
 
     $('.shop-detail-carousel').owlCarousel({
