@@ -1,5 +1,45 @@
 $(function () {
 
+    function getPageName() {
+        var pathname = window.location.pathname;
+        if (pathname === '/index.html') {
+            return 'HomePage';
+        } else if (pathname.indexOf('detail.html') > -1) {
+            return 'ProductPage';
+        } else if (pathname.indexOf('detail.html') > -1) {
+            return 'ProductPage';
+        } else {
+            return '';
+        }
+    }
+    function getParams() {
+        var pageName = getPageName();
+        var result = null;
+
+        if (pageName === 'ProductPage') {
+            //get viewed product information, add found information to result
+            result = {};
+            result.productName = $('#productMain h1.text-center').text();
+            result.productPrice = $('#productMain.price').text();
+            return result;
+        } else if (pageName === 'Checkout') {
+            //get order information, add found information to result
+            return result;
+        }
+        return result;
+    }
+    function triggerPageEvent() {
+        var pageName = getPageName();
+        var params = getParams();
+        
+        if (pageName = '') {
+            return;
+        }
+        $(document).trigger('view:' + pageName, params);
+    }
+    
+    triggerPageEvent();
+
     var pathname = window.location.pathname;
 
 
