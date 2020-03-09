@@ -2,28 +2,52 @@ $(function () {
 
     function getPageName() {
         var pathname = window.location.pathname;
-        if (pathname === '/index.html') {
+
+        if (pathname.indexOf('index.html') > -1) {
             return 'HomePage';
         } else if (pathname.indexOf('detail.html') > -1) {
             return 'ProductPage';
-        } else if (pathname.indexOf('detail.html') > -1) {
-            return 'ProductPage';
-        } else {
-            return '';
+        } else if (pathname.indexOf('checkout4.html') > -1) {
+            return 'Checkout4';
         }
     }
+
+    function getProductInfo(){
+        return {
+            productName: $('#productMain h1.text-center').text(),
+            productPrice: $('#productMain .price').text()
+        }
+    }
+    function getCartInfo() {
+        var productInEls = $('#checkout table tbody tr');
+        var result = {};
+
+        result.totalPurchase = $('#checkout table tfoot th').eq(1).text();
+        result.userAgent = navigator.userAgent;
+        result.productList = [];
+
+        $.each(productInEls, function(index, el){
+            result.productList.push({
+                productName: $(el).children()[1].text(),
+                productPrice: $(el).children().eq(2).text(),
+                quantity: $(el).children().eq(3).text(),
+                discount: $(el).children().eq(4).text(),
+                price: $(el).children().eq(5).text()
+            });
+        });
+        return result;
+    }
+
     function getParams() {
         var pageName = getPageName();
         var result = null;
 
         if (pageName === 'ProductPage') {
             //get viewed product information, add found information to result
-            result = {};
-            result.productName = $('#productMain h1.text-center').text();
-            result.productPrice = $('#productMain.price').text();
+            result = getProductInfo();
             return result;
-        } else if (pageName === 'Checkout') {
-            //get order information, add found information to result
+        } else if (pageName === 'Checkout4') {
+            result = getCartInfo();
             return result;
         }
         return result;
@@ -32,60 +56,73 @@ $(function () {
         var pageName = getPageName();
         var params = getParams();
         
-        if (pageName = '') {
-            return;
+        if (pageName === 'Checkout4') {
+            //specific event listener for checkout4
+            $('#checkout button').on('click', function(){
+                $(document).trigger('conversion', params);
+            });
+        } else {
+            $(document).trigger('view:' + pageName, params);
         }
-        $(document).trigger('view:' + pageName, params);
+        
     }
     
+    $(document).on('view:ProductPage', function(event, params) {
+        console.log('The first parameter that I received was: ');
+        console.log(event);
+
+        console.log('The second parameter that I received was: ');
+        console.log(params);
+    })
+
     triggerPageEvent();
 
-    var pathname = window.location.pathname;
+    // var pathname = window.location.pathname;
 
 
-    $(document).on('view:HomePage', function(){
-        console.warn('View on [HomePage] tracked');
-    });
-    $(document).on('view:ProductPage', function(){
-        console.warn('View on [ProductPage] tracked');
-    });
-    $(document).on('view:Basket', function(){
-        console.warn('View on [BasketPage] tracked');
-    });
-    $(document).on('view:Checkout', function(){
-        console.warn('View on [CheckoutPage] tracked');
-    });
-    $(document).on('view:Delivery', function(){
-        console.warn('View on [DeliveryPage] tracked');
-    });
-    $(document).on('view:Payment', function(){
-        console.warn('View on [PaymentPage] tracked');
-    });
+    // $(document).on('view:HomePage', function(){
+    //     console.warn('View on [HomePage] tracked');
+    // });
+    // $(document).on('view:ProductPage', function(){
+    //     console.warn('View on [ProductPage] tracked');
+    // });
+    // $(document).on('view:Basket', function(){
+    //     console.warn('View on [BasketPage] tracked');
+    // });
+    // $(document).on('view:Checkout', function(){
+    //     console.warn('View on [CheckoutPage] tracked');
+    // });
+    // $(document).on('view:Delivery', function(){
+    //     console.warn('View on [DeliveryPage] tracked');
+    // });
+    // $(document).on('view:Payment', function(){
+    //     console.warn('View on [PaymentPage] tracked');
+    // });
 
-    if (pathname === '/index.html' || pathname === '/') {
-        $(document).trigger('view:HomePage');
-    }
-    if (pathname === '/detail.html') {
-        $(document).trigger('view:ProductPage');
-    }
-    if (pathname === '/basket.html') {
-        $(document).trigger('view:Basket');
-    }
-    if (pathname === '/checkout1.html') {
-        $(document).trigger('view:Checkout');
-    }
-    if (pathname === '/checkout2.html') {
-        $(document).trigger('view:Delivery');
-    }
-    if (pathname === '/checkout3.html') {
-        $(document).trigger('view:Payment');
-    }
-    if (pathname === '/checkout4.html') {
-        $('.box-footer [type="submit"]').click(function(){
-            $(document).trigger('conversion');
-            alert('Conversion event triggered');
-        });
-    }
+    // if (pathname === '/index.html' || pathname === '/') {
+    //     $(document).trigger('view:HomePage');
+    // }
+    // if (pathname === '/detail.html') {
+    //     $(document).trigger('view:ProductPage');
+    // }
+    // if (pathname === '/basket.html') {
+    //     $(document).trigger('view:Basket');
+    // }
+    // if (pathname === '/checkout1.html') {
+    //     $(document).trigger('view:Checkout');
+    // }
+    // if (pathname === '/checkout2.html') {
+    //     $(document).trigger('view:Delivery');
+    // }
+    // if (pathname === '/checkout3.html') {
+    //     $(document).trigger('view:Payment');
+    // }
+    // if (pathname === '/checkout4.html') {
+    //     $('.box-footer [type="submit"]').click(function(){
+    //         $(document).trigger('conversion');
+    //         // alert('Conversion event triggered');
+    //     });
+    // }
 
 // breadcrums missing...
 
